@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solo Texto</title>
+
+    <style>
+	* {
+            box-sizing: border-box;
+	}
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .botones {
+            display: flex;
+            align-items: center;
+            margin: 10px 0 10px 0;
+        }
+
+        .botones button {
+            padding: 10px 20px;
+            margin: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .contenedor {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex: 1;
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        .caja-texto {
+            width: 48%;
+            height: 100%;
+            border: 1px solid #ccc;
+            padding: 10px;
+            font-size: 20px;
+            resize: none;
+            box-sizing: border-box;
+            margin-bottom: 10px;
+        }
+
+	#caja0 {
+	    width: 10rem;
+	    height: 80%;
+	    scrollbar-width: none;
+	    padding: 0;
+	    margin: 0;
+        }
+
+	#caja1 {
+            width: 2%;
+	    padding-right: 0;
+	    padding-left: 0;
+	    overflow: hidden;
+        }
+
+	#caja2 {
+            width: 8%;
+	    scrollbar-width: none;
+	    padding-right: 0;
+        }
+
+	#caja3 {
+            width: 38%;
+        }
+    </style>
+
+</head>
+<body>
+    <!-- Botones para cambiar el tamaño del texto -->
+    <div class="botones">
+        <textarea class="caja-texto" id="caja0"></textarea>
+        <button onclick="cambiarTamanio('agrandar')">Agrandar Texto</button>
+        <button onclick="cambiarTamanio('reducir')">Reducir Texto</button>
+    </div>
+    
+    <!-- Contenedor de las cajas de texto -->
+    <div class="contenedor">
+        <textarea class="caja-texto" id="caja2">
+
+
+
+
+</textarea>
+        <textarea class="caja-texto" id="caja3">
+
+
+
+
+
+
+
+        </textarea>
+    </div>
+</body>
+    <script>
+        // Cambiar el tamaño del texto para acción de los botones
+        function cambiarTamanio(accion) {
+            const cajas = document.querySelectorAll('.caja-texto');
+            cajas.forEach(caja => {
+                let tamanioActual = window.getComputedStyle(caja).fontSize;
+                let tamanio = parseFloat(tamanioActual);
+                if (accion === 'agrandar') {
+                    tamanio += 2;
+                } else if (accion === 'reducir') {
+                    tamanio -= 2;
+                }
+                caja.style.fontSize = tamanio + 'px';
+            });
+        }
+
+    	const box0 = document.getElementById('caja0');
+    	const box1 = document.getElementById('caja1');
+    	const box2 = document.getElementById('caja2');
+	const box3 = document.getElementById('caja3');
+
+        // Seleccionar el primer cuadro de texto y que esté listo para escribir allí
+	box0.focus();
+
+    	box2.addEventListener('scroll', () => {
+        	box1.scrollTop = box2.scrollTop;
+    	});
+
+	box0.addEventListener('input', function(event) {
+	    const x = box0.value.split("\n");
+	    let currentDate = new Date();
+	    let dateString = currentDate.toDateString()
+	    const y = x[15]+"\n"+x[0]+".. . . . . . . ."+"\n"+x[10]+"\n"+dateString+"\n";
+
+	    // esto era para copiar en el portapapeles pero no se ve necesario
+	    // navigator.clipboard.writeText(y)
+
+	    box0.value = "";
+	    box3.value = "\n\n\n" + y + "\n\n" + box3.value;
+	    box3.focus();
+	    box3.scrollTop = 0;
+	    box3.setSelectionRange(1, 1);
+
+	    // aumentar info en box2
+	    box2.value = x[15] + "\n" + box2.value;
+	});
+
+	// Local storage
+	function saveContent() {
+	  const content = box2.value;
+	  localStorage.setItem('Llamadas', content);
+	}
+	window.onload = function() {
+	  const savedContent = localStorage.getItem('Llamadas');
+	  if (savedContent) {
+	    box2.value = savedContent;
+	  }
+	};
+	box2.addEventListener('input', function(event) {
+	  saveContent();
+	});
+    </script>
+</html>
